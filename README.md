@@ -5,7 +5,7 @@ Configuration application for VMagicMirror.
 Copyright belongs to the original author.
 [VMagicMirror](https://github.com/malaybaku/VMagicMirror)
 [VMagicMirror_ja_en](https://github.com/malaybaku/VMagicMirrorConfig)
-#语言  （Language）
+# 语言  （Language）
 这个项目只包含中文和日语
 This project only contains Chinese and Japanese
 
