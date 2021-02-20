@@ -8,10 +8,11 @@
              mc:Ignorable="d" 
              d:DataContext="{x:Type vmm:MainWindowViewModel}"
              d:DesignWidth="520"
-             d:DesignHeight="570"
+             d:DesignHeight="590"             
              >
     <UserControl.Resources>
         <vmm:WhiteSpaceStringToNullConverter x:Key="WhiteSpaceStringToNullConverter"/>
+        <vmm:Lv50Converter x:Key="Lv50Converter"/>
         <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="Margin" Value="5"/>
         </Style>
@@ -33,6 +34,10 @@
         </Style>
             
         <Style TargetType="md:Card" BasedOn="{StaticResource {x:Type md:Card}}">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style x:Key="StreamingSectionBorder" TargetType="Border" BasedOn="{StaticResource SectionBorder}">
             <Setter Property="Margin" Value="4"/>
             <Setter Property="Padding" Value="5"/>
         </Style>
@@ -58,14 +63,15 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
+                  Margin="0"
                   >
-        <Grid Margin="4">
+        <Grid Margin="5,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -87,75 +93,9 @@
                                   IsChecked="{Binding WindowSetting.WindowDraggable, Mode=TwoWay}"
                                   />
                     </StackPanel>
-                </md:Card>
+                </Border>
 
-                <md:Card>
-                    <StackPanel>
-                        <Grid>
-                            <StackPanel Orientation="Horizontal">
-
-                                <md:PackIcon Kind="CameraUser"
-                                             Style="{StaticResource SettingHeaderPackIcon}"
-                                             />
-
-                                <TextBlock Text="{DynamicResource Window_VirtualCamOutput}"
-                                           Margin="5"
-                                           Style="{StaticResource HeaderText}"
-                                           />
-                            </StackPanel>
-
-                            <Button Style="{StaticResource MaterialDesignOutlinedButton}"
-                                    Content="{DynamicResource Window_VirtualCamOutput_FirstTime_Header}"
-                                    Command="{Binding WindowSetting.OpenCameraInstallDialogCommand}"
-                                    HorizontalAlignment="Right"
-                                    Padding="2"
-                                    Margin="0,0,10,0"
-                                    />
-                        </Grid>
-
-                        <CheckBox IsChecked="{Binding WindowSetting.VirtualCamEnabled}" 
-                              Margin="5,3,5,0">
-                            <TextBlock Text="{DynamicResource Window_VirtualCamOutput_Enable}"/>
-                        </CheckBox>
-
-                        <Grid Margin="5,0,5,5" IsEnabled="{Binding WindowSetting.VirtualCamEnabled}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="10,0"
-                                           Text="{DynamicResource Window_VirtualCamOutput_Resolution}"/>
-                                <TextBox VerticalContentAlignment="Center"
-                                         Width="45"
-                                         Text="{Binding WindowSetting.VirtualCamWidth}"
-                                         md:HintAssist.Hint="{DynamicResource Window_VirtualCamOutput_Width}"
-                                         />
-                                <TextBlock Margin="4,3" 
-                                           VerticalAlignment="Bottom"
-                                           Text="x" 
-                                           />
-                                <TextBox VerticalContentAlignment="Center"
-                                         Width="45"
-                                         Text="{Binding WindowSetting.VirtualCamHeight}"
-                                         md:HintAssist.Hint="{DynamicResource Window_VirtualCamOutput_Height}"
-                                         />
-                            </StackPanel>
-                            <Button HorizontalAlignment="Right"
-                                    Width="90"
-                                    Padding="3"
-                                    Margin="5,0"
-                                    Command="{Binding WindowSetting.VirtualCamResizeCommand}">
-                                <StackPanel Style="{StaticResource IconTextSetStackPanel}">
-                                    <md:PackIcon Style="{StaticResource IconTextSetIcon}"
-                                                 Kind="Resize"
-                                                 />
-                                    <TextBlock Style="{StaticResource IconSetSetText}"
-                                               Text="{DynamicResource Window_VirtualCamOutput_MatchWindowSize}"
-                                               />
-                                </StackPanel>
-                            </Button>
-                        </Grid>
-                    </StackPanel>
-                </md:Card>
-
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -171,6 +111,8 @@
                         <Grid Margin="5,3,5,5">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -204,7 +146,78 @@
                                         md:HintAssist.Hint="Microphone"
                                         />
 
-                            <md:PackIcon Grid.Row="1" Grid.Column="0"
+                            <Grid Grid.Row="1" Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  Margin="40,5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Motion_Mouth_Microphone_Sensitivity}"
+                                       />
+                                <Slider x:Name="sliderMicrophoneSensitivity"
+                                    Grid.Column="1"
+                                    Minimum="-50"
+                                    Maximum="50"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    Value="{Binding MotionSetting.MicrophoneSensitivity, Mode=TwoWay}"
+                                    />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding Value, ElementName=sliderMicrophoneSensitivity}"
+                                         Margin="0"
+                                         />
+                            </Grid>
+
+                            <Grid Grid.Row="2" Grid.Column="1"
+                              Grid.ColumnSpan="2"
+                              Margin="0,3,0,7">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsEnabled="{Binding MotionSetting.EnableLipSync}"
+                                      IsChecked="{Binding MotionSetting.ShowMicrophoneVolume}"
+                                      HorizontalAlignment="Left"
+                                      Margin="15,0,0,0"
+                                      >
+                                    <TextBlock Text="{DynamicResource Motion_Mouth_Microphone_Visualize}" />
+                                </CheckBox>
+                                <Border Grid.Column="2"
+                                        Style="{x:Null}"
+                                        Margin="0"
+                                        Height="8" 
+                                        Background="LightGray"
+                                        >
+                                    <Grid Margin="0"
+                                      Height="6"
+                                      Background="LightGray">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.OpacityMask>
+                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                <GradientStop Offset="0" Color="White"/>
+                                                <GradientStop Offset="{Binding MotionSetting.MicrophoneVolumeValue,
+                                                                               Converter={StaticResource Lv50Converter}}"
+                                                          Color="White"/>
+                                                <GradientStop Offset="{Binding MotionSetting.MicrophoneVolumeValue,
+                                                                               Converter={StaticResource Lv50Converter}}"
+                                                          Color="Transparent"/>
+                                            </LinearGradientBrush>
+                                        </Grid.OpacityMask>
+                                        <Rectangle Grid.Column="0" Fill="DarkGray" />
+                                        <Rectangle Grid.Column="1" Fill="Lime" />
+                                        <Rectangle Grid.Column="2" Fill="Salmon" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+
+
+                            <md:PackIcon Grid.Row="3" Grid.Column="0"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Width="25"
@@ -212,7 +225,7 @@
                                             Kind="Webcam"
                                             />
 
-                            <CheckBox Grid.Row="1" Grid.Column="1"
+                            <CheckBox Grid.Row="3" Grid.Column="1"
                                         Margin="5"
                                         IsChecked="{Binding MotionSetting.EnableFaceTracking}"
                                         >
@@ -221,7 +234,7 @@
                                 </CheckBox.Content>
                             </CheckBox>
 
-                            <ComboBox Grid.Row="1" Grid.Column="2"
+                            <ComboBox Grid.Row="3" Grid.Column="2"
                                         HorizontalAlignment="Stretch"
                                         Margin="5,0"
                                         IsEnabled="{Binding MotionSetting.EnableFaceTracking}"
@@ -237,7 +250,7 @@
                                                       FallbackValue=Collapsed}"
                                  ToolTip="{DynamicResource Motion_Face_FolderMaybeIncorrect_Tooltip}"
                                  HorizontalAlignment="Center"
-                                 Background="{StaticResource SecondaryAccentBrush}" Padding="3">
+                                 Background="{StaticResource SecondaryHueMidBrush}" Padding="3">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <TextBlock Text="{DynamicResource Motion_Face_FolderMaybeIncorrect_Header}" 
                                            FontWeight="Bold"
@@ -270,6 +283,15 @@
                                         />
                             </StackPanel>
                         </md:Card>
+
+                        <CheckBox Margin="50,0,5,0"
+                                  IsEnabled="{Binding MotionSetting.EnableFaceTracking}"
+                                  IsChecked="{Binding MotionSetting.EnableWebCamHighPowerMode}"
+                                  >
+                            <CheckBox.Content>
+                                <TextBlock Text="{DynamicResource Motion_Face_EnableWebCamHighPowerMode}"/>
+                            </CheckBox.Content>
+                        </CheckBox>
 
                         <CheckBox Margin="50,0,5,0"
                                   IsEnabled="{Binding MotionSetting.EnableFaceTracking}"
@@ -322,9 +344,9 @@
                                         Content="{DynamicResource Motion_Eye_LookAtPoint_None}"/>
                         </Grid>
                     </StackPanel>
-                </md:Card>
+                </Border>
 
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -358,7 +380,7 @@
                                         />
                         </StackPanel>
 
-                        <Grid Margin="5,3">
+                        <Grid Margin="5,3,5,20">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -381,11 +403,11 @@
                             </ComboBox>
                         </Grid>
                     </StackPanel>
-                </md:Card>
+                </Border>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -451,23 +473,40 @@
                         </Grid>
 
                     </StackPanel>
-                </md:Card>
+                </Border>
 
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
 
-                            <md:PackIcon Style="{StaticResource HeaderPackIcon}"
-                                            Kind="Videocam"
-                                            />
+                                <md:PackIcon Style="{StaticResource HeaderPackIcon}"
+                                                Kind="Videocam"
+                                                />
 
-                            <TextBlock Text="{DynamicResource Layout_Camera}"
-                                        Margin="5"
-                                        Style="{StaticResource HeaderText}"
-                                        />
-                        </StackPanel>
-                            
+                                <TextBlock Text="{DynamicResource Layout_Camera}"
+                                           Margin="5"
+                                           Style="{StaticResource HeaderText}"
+                                           />
+                            </StackPanel>
+
+                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                    Content="{DynamicResource Layout_Camera_HowTo}"
+                                    Click="OnCameraHowToButtonClicked"
+                                    MouseLeave="OnCameraHowToButtonMouseLeave"
+                                    HorizontalAlignment="Right"
+                                    Width="NaN"
+                                    Padding="3"
+                                    >
+                                <Button.ToolTip>
+                                    <ToolTip>
+                                        <TextBlock Text="{DynamicResource Layout_Camera_HowTo_Content}"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                        </Grid>
+                        
                         <CheckBox Content="{DynamicResource Layout_EnableFreeCameraMode}" 
                                     IsChecked="{Binding LayoutSetting.EnableFreeCameraMode}"
                                     Margin="10,0" Height="25"
@@ -553,9 +592,9 @@
                         </Button>
 
                     </StackPanel>
-                </md:Card>
+                </Border>
 
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
 
@@ -571,7 +610,7 @@
 
                         <CheckBox Grid.Row="2" Grid.Column="0"
                                     Grid.ColumnSpan="3"
-                                    Margin="10,2" 
+                                    Margin="10,0" 
                                     Content="{DynamicResource Layout_DeviceFreeLayout}"
                                     IsChecked="{Binding LayoutSetting.EnableDeviceFreeLayout}"
                                     />
@@ -592,10 +631,9 @@
                         </Button>
 
                     </StackPanel>
-                </md:Card>
+                </Border>
 
-
-                <md:Card>
+                <Border Style="{StaticResource StreamingSectionBorder}">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
 
@@ -622,7 +660,7 @@
                         </CheckBox>
 
                     </StackPanel>
-                </md:Card>
+                </Border>
             </StackPanel>
         </Grid>
     </ScrollViewer>

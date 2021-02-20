@@ -47,7 +47,7 @@ namespace Baku.VMagicMirrorConfig
         {
             var url = LanguageSelector.StringToLanguage(LanguageSelector.Instance.LanguageName) switch
             {
-                Languages.Japanese => "https://malaybaku.github.io/VMagicMirror/tips/virtual_camera",
+                Languages.Chinese => "https://malaybaku.github.io/VMagicMirror/tips/virtual_camera",
                 _ => "https://malaybaku.github.io/VMagicMirror/en/tips/virtual_camera",
             };
             UrlNavigate.Open(url);

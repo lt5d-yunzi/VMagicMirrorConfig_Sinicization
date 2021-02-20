@@ -10,7 +10,7 @@ namespace Baku.VMagicMirrorConfig
             => value switch
             {
                 //""をnullにするのがポイント
-                string s when string.IsNullOrEmpty(s) => LanguageSelector.Instance.LanguageName == "Japanese" ? "(何もしない)" : "(Do Nothing)",
+                string s when string.IsNullOrEmpty(s) => LanguageSelector.Instance.LanguageName == "Chinese" ? "(何もしない)" : "(Do Nothing)",
                 string s => s,
                 _ => Binding.DoNothing,
             };

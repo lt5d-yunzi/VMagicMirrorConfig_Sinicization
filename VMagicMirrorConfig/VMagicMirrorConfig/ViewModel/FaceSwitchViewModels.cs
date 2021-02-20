@@ -11,7 +11,7 @@ namespace Baku.VMagicMirrorConfig
         {
             _parent = parent;
             _model = model;
-            SetLanguage(LanguageSelector.Instance.LanguageName == "Japanese" ? Languages.Japanese : Languages.Chinese);
+            SetLanguage(LanguageSelector.Instance.LanguageName == "Chinese" ? Languages.Chinese : Languages.English);
         }
 
         private void SetLanguage(Languages lang)
@@ -111,12 +111,12 @@ namespace Baku.VMagicMirrorConfig
     {
         public static string GetText(Languages lang, string key)
         {
-            var src = (lang == Languages.Japanese) ? _japanese : _Chinese;
+            var src = (lang == Languages.Chinese) ? _Chinese : _english;
             //NOTE: keyはWPFコード内で決め打ちしたものしか来ないハズなので"-"にはならないはず(なったらコードのバグ)
             return src.ContainsKey(key) ? src[key] : "-";
         }
 
-        private static Dictionary<string, string> _japanese = new Dictionary<string, string>()
+        private static Dictionary<string, string> _Chinese = new Dictionary<string, string>()
         {
             //TODO: 目の開閉と眉の上下って筋肉的に連動しているので、片方だけ残すほうがよいかも。
             //TODO: 口をすぼめる動きを入れてもいい…かもしれないが、喋りと両立しなさそうなので乗り気ではない。
@@ -129,15 +129,15 @@ namespace Baku.VMagicMirrorConfig
             [FaceSwitchKeys.TongueOut] = "舌を出すと",
         };
 
-        private static Dictionary<string, string> _Chinese = new Dictionary<string, string>()
+        private static Dictionary<string, string> _english = new Dictionary<string, string>()
         {
-            [FaceSwitchKeys.MouthSmile] = "嘴角微笑",
-            [FaceSwitchKeys.EyeSquint] = "眯缝眼睛",
-            [FaceSwitchKeys.EyeWide] = "睁大眼睛",
-            [FaceSwitchKeys.BrowUp] = "眉头朝上",
-            [FaceSwitchKeys.BrowDown] = "眉头朝下",
-            [FaceSwitchKeys.CheekPuff] = "两颊鼓起来",
-            [FaceSwitchKeys.TongueOut] = "伸出舌头",
+            [FaceSwitchKeys.MouthSmile] = "Mouth smile",
+            [FaceSwitchKeys.EyeSquint] = "Eye squint",
+            [FaceSwitchKeys.EyeWide] = "Eye wide",
+            [FaceSwitchKeys.BrowUp] = "Brow up",
+            [FaceSwitchKeys.BrowDown] = "Brow down",
+            [FaceSwitchKeys.CheekPuff] = "Cheek puff",
+            [FaceSwitchKeys.TongueOut] = "Tongue out",
         };
 
     }

@@ -81,111 +81,111 @@
 
         public static MessageIndication LoadVrmConfirmation(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "VRMの読み込み",
                 "ビューアー画面のライセンスを確認してください。読み込みますか？"
                 ),
             _ => new MessageIndication(
-                "加载VRM文件",
-                "请确认窗口画面的许可协议。继续读取吗？"
+                "Load VRM",
+                "Please confirm the license in viewer window. Do you load the character?"
                 ),
         };
 
         public static MessageIndication ResetSettingConfirmation(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "設定のリセット",
                 "リセットを実行すると全ての設定が初期状態に戻ります。リセットしますか？"
                 ),
             _ => new MessageIndication(
-                "重置",
-                "确认要把所有设置还原到初始状态？"
+                "Reset Setting",
+                "Are you sure you want to reset all settings in VMagicMirror?"
                 ),
         };
 
         public static MessageIndication ResetSingleCategoryConfirmation(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "設定のリセット",
                 "選択したカテゴリの設定をリセットしますか？"
                 ),
             _ => new MessageIndication(
-                "重置",
-                "确认要把所选类别的设置重置吗?"
+                "Reset Setting",
+                "Are you sure you want to reset selected category setting?"
                 ),
         };
 
         public static MessageIndication ErrorLoadSetting(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "ロード失敗",
                 "設定ファイルのロードに失敗しました。エラー: "
                 ),
             _ => new MessageIndication(
-                "加载失败",
-                "无法加载设置文件。 Error: "
+                "Load failed",
+                "Failed to load setting file. Error: "
                 ),
         };
 
         public static MessageIndication DeleteWordToMotionItem(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "モーションの削除",
                 "このモーション'{0}'を削除しますか？"
                 ),
             _ => new MessageIndication(
-                "删除动作",
-                "确定要删除 '{0}'吗?"
+                "Delete Item",
+                "Are you sure to delete this item '{0}'?"
                 ),
         };
 
         public static MessageIndication ForgetBlendShapeClip(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "ブレンドシェイプ情報のクリア",
                 "このブレンドシェイプ'{0}'の設定を削除しますか？"
                 ),
             _ => new MessageIndication(
-                "删除混合图形设定",
-                "确定要删除 '{0}'吗?"
+                "Clear Blend Shape Setting",
+                "Are you sure to clear the blend shape setting of '{0}'?"
                 ),
         };
 
         public static MessageIndication InvalidIpAddress(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "無効なIPアドレス",
                 "無効なIPアドレスが指定されています。入力を確認して下さい。"
                 ),
             _ => new MessageIndication(
-                "无效的IP地址",
-                "设置了无效的IP地址，请检查输入。 "
+                "Invalid IP Address",
+                "Invalid IP Address is set, please check the input."
                 ),
         };
 
         public static MessageIndication ShowVRoidSdkUi(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "VRoid Hubに接続中",
                 "キャラクターウィンドウ上でモデルを選択するか、またはキャンセルしてください。"),
             _ => new MessageIndication(
-                "连接到VRoid Hub",
-                "选择要加载的模型，或取消操作。 "),
+                "Connecting to VRoid Hub",
+                "Select model to load, or cancel operation."),
         };
 
         public static MessageIndication ShowLoadingPreviousVRoid(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "VRoid Hubに接続中",
                 "前回使用したモデルのロードを試みています。モデルをロードするか、またはキャンセルしてください。"),
             _ => new MessageIndication(
-                "连接到VRoid Hub",
-                "正在尝试加载以前使用的形象。选择模型或取消操作。"),
+                "Connecting to VRoid Hub",
+                "Trying to load avatar used in previous time. Select model or cancel operation."),
         };
 
         public static MessageIndication ExTrackerMissingBlendShapeNames(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "未定義のBlendShapeClipがあります",
                 @"パーフェクトシンクに必要なBlendShapeClipの一部が未定義です。
 
@@ -198,31 +198,30 @@
 定義されていないBlendShapeClipの名称: 
 "),
             _ => new MessageIndication(
-                "缺少 BlendShapeClip",
-                @"检测缺失BlendShapeClips无法实现完美同步。
+                "Missing BlendShapeClip",
+                @"Detect missing BlendShapeClips for perfect sync.
 
-如果你的头像看起来正常，忽略这条信息。
-否则，关闭此对话框并查看“关于完美同步”
-检查如何设置模型。
+If your avatar looks normal, ignore this message. 
+Otherwise, close this dialog and see 'About Perfect Sync'
+to check how to setup the model.
 
 ---
-
-未定义的blendshapeclip名称：
+Undefined BlendShaepClip names:
 "),
         };
 
         public static MessageIndication ExTrackerCheckTurnOff(Languages lang) => lang switch
         {
-            Languages.Japanese => new MessageIndication(
+            Languages.Chinese => new MessageIndication(
                 "外部トラッキング機能をオフ",
                 @"外部トラッキング機能をオフにしますか？
 webカメラでの顔トラッキングを有効にする場合は
 'OK'を選択し、iPhone/iPadとの連携を終了してください。"),
             _ => new MessageIndication(
-                "关闭外部跟踪功能",
-                @"关闭外部跟踪功能吗？
+                "Turn Off External Tracker",
+                @"Do you want to turn off external tracker?.
 
-选择“OK”，启用web摄像机的面部跟踪"),
+Choose 'OK' to enable webcam based tracking."),
         };
     }
 }

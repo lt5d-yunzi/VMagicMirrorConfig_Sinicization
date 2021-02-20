@@ -13,22 +13,22 @@ namespace Baku.VMagicMirrorConfig
 
         private IMessageSender? _sender = null;
 
-        public event Action<Languages> LanguageChanged;
+        public event Action<Languages>? LanguageChanged;
 
-        private string _languageName = nameof(Languages.Japanese);
+        private string _languageName = nameof(Languages.Chinese);
         public string LanguageName
         {
             get => _languageName;
             set
             {
                 if (_languageName != value && 
-                    (value == nameof(Languages.Japanese) || value == nameof(Languages.Chinese))
+                    (value == nameof(Languages.Chinese) || value == nameof(Languages.English))
                     )
                 {
                     _languageName = value;
                     SetLanguage(LanguageName);
                     LanguageChanged?.Invoke(
-                        value == nameof(Languages.Japanese) ? Languages.Japanese : Languages.Chinese
+                        value == nameof(Languages.Chinese) ? Languages.Chinese : Languages.English
                         );
                 }
             }
@@ -38,8 +38,8 @@ namespace Baku.VMagicMirrorConfig
         {
             _sender = sender;
 
-            if (preferredLanguageName == "Japanese" || 
-                preferredLanguageName == "Chinese")
+            if (preferredLanguageName == "Chinese" || 
+                preferredLanguageName == "English")
             {
                 LanguageName = preferredLanguageName;
             }
@@ -47,15 +47,15 @@ namespace Baku.VMagicMirrorConfig
             {
                 LanguageName =
                     (CultureInfo.CurrentCulture.Name == "ja-JP") ?
-                    "Japanese" :
-                    "Chinese";
+                    "Chinese" :
+                    "English";
             }
         }
 
         public static Languages StringToLanguage(string languageName) => languageName switch
         {
-            "Japanese" => Languages.Japanese,
-            _ => Languages.Chinese,
+            "Chinese" => Languages.Chinese,
+            _ => Languages.English,
         };
 
         private void SetLanguage(string languageName)
@@ -73,7 +73,7 @@ namespace Baku.VMagicMirrorConfig
 
     enum Languages
     {
-        Japanese,
         Chinese,
+        English
     }
 }

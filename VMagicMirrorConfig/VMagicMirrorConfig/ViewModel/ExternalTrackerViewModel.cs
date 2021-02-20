@@ -158,7 +158,7 @@ namespace Baku.VMagicMirrorConfig
         private void OpenPerfectSyncTipsUrl()
         {
             string url =
-                (LanguageSelector.Instance.LanguageName == "Japanese") ?
+                (LanguageSelector.Instance.LanguageName == "Chinese") ?
                 "https://malaybaku.github.io/VMagicMirror/tips/perfect_sync" :
                 "https://malaybaku.github.io/VMagicMirror/en/tips/perfect_sync";
             UrlNavigate.Open(url);
@@ -305,7 +305,7 @@ namespace Baku.VMagicMirrorConfig
         private void OpenInstructionUrl()
         {
             string url =
-                (LanguageSelector.Instance.LanguageName == "Japanese") ?
+                (LanguageSelector.Instance.LanguageName == "Chinese") ?
                 "https://malaybaku.github.io/VMagicMirror/docs/external_tracker" :
                 "https://malaybaku.github.io/VMagicMirror/en/docs/external_tracker";
             UrlNavigate.Open(url);
@@ -396,7 +396,7 @@ namespace Baku.VMagicMirrorConfig
         {
             var url = LanguageSelector.StringToLanguage(LanguageSelector.Instance.LanguageName) switch
             {
-                Languages.Japanese => "https://malaybaku.github.io/VMagicMirror/docs/external_tracker_ifacialmocap#troubleshoot",
+                Languages.Chinese => "https://malaybaku.github.io/VMagicMirror/docs/external_tracker_ifacialmocap#troubleshoot",
                 _ => "https://malaybaku.github.io/VMagicMirror/en/docs/external_tracker_ifacialmocap#troubleshoot",
             };
             UrlNavigate.Open(url);

@@ -21,8 +21,6 @@ namespace Baku.VMagicMirrorConfig
         public WordToMotionSettingViewModel WordToMotionSetting { get; private set; }
         public ExternalTrackerViewModel ExternalTrackerSetting { get; private set; }
 
-        public DialogHelperViewModel DialogHelper => DialogHelperViewModel.Instance;
-
         private DeviceFreeLayoutHelper? _deviceFreeLayoutHelper;
 
         private bool _activateOnStartup = false;
@@ -58,7 +56,6 @@ namespace Baku.VMagicMirrorConfig
 
         //NOTE: モデルのロード確認UI(ファイル/VRoidHubいずれか)を出す直前時点での値を保持するフラグで、UIが出てないときはnullになる
         private bool? _windowTransparentBeforeLoadProcess = null;
-        private bool? _windowTopMostBeforeLoadProcess = null;
 
         private readonly ScreenshotController _screenshotController;
 
@@ -77,7 +74,7 @@ namespace Baku.VMagicMirrorConfig
             Initializer.MessageReceiver.ReceivedCommand += OnReceiveCommand;
         }
 
-        private void OnReceiveCommand(object sender, CommandReceivedEventArgs e)
+        private void OnReceiveCommand(object? sender, CommandReceivedEventArgs e)
         {
             switch (e.Command)
             {
@@ -86,24 +83,18 @@ namespace Baku.VMagicMirrorConfig
                     if (_isVRoidHubUiActive)
                     {
                         MessageBoxWrapper.Instance.SetDialogResult(false);
-                        DialogHelper.IsOpen = false;
                     }
 
                     //ファイルパスではなくモデルID側を最新情報として覚えておく
                     _lastVrmLoadFilePath = "";
                     _lastLoadedVRoidModelId = e.Args;
 
-                    if (AutoAdjustEyebrowOnLoaded)
-                    {
-                        MessageSender.SendMessage(MessageFactory.Instance.RequestAutoAdjustEyebrow());
-                    }
                     break;
                 case ReceiveMessageNames.VRoidModelLoadCanceled:
                     //WPF側のダイアログによるUIガードを終了
                     if (_isVRoidHubUiActive)
                     {
                         MessageBoxWrapper.Instance.SetDialogResult(false);
-                        DialogHelper.IsOpen = false;
                     }
                     break;
             }
@@ -121,12 +112,12 @@ namespace Baku.VMagicMirrorConfig
         private readonly ObservableCollection<string> _availableLanguageNames
             = new ObservableCollection<string>()
         {
-            "Japanese",
             "Chinese",
+            "English",
         };
         public ReadOnlyObservableCollection<string> AvailableLanguageNames { get; }
 
-        private string _languageName = nameof(Languages.Japanese);
+        private string _languageName = nameof(Languages.Chinese);
         public string LanguageName
         {
             get => _languageName;
@@ -137,13 +128,6 @@ namespace Baku.VMagicMirrorConfig
                     LanguageSelector.Instance.LanguageName = LanguageName;
                 }
             }
-        }
-
-        private bool _autoAdjustEyebrowOnLoaded = true;
-        public bool AutoAdjustEyebrowOnLoaded
-        {
-            get => _autoAdjustEyebrowOnLoaded;
-            set => SetValue(ref _autoAdjustEyebrowOnLoaded, value);
         }
 
         #endregion
@@ -165,10 +149,6 @@ namespace Baku.VMagicMirrorConfig
         private ActionCommand? _openVRoidHubCommand;
         public ActionCommand OpenVRoidHubCommand
             => _openVRoidHubCommand ??= new ActionCommand(OpenVRoidHub);
-
-        private ActionCommand? _openManualUrlCommand;
-        public ActionCommand OpenManualUrlCommand
-            => _openManualUrlCommand ??= new ActionCommand(OpenManualUrl);
 
         private ActionCommand? _autoAdjustCommand;
         public ActionCommand AutoAdjustCommand
@@ -264,10 +244,6 @@ namespace Baku.VMagicMirrorConfig
                 MessageSender.SendMessage(MessageFactory.Instance.OpenVrm(filePath));
                 _lastVrmLoadFilePath = filePath;
                 _lastLoadedVRoidModelId = "";
-                if (AutoAdjustEyebrowOnLoaded)
-                {
-                    MessageSender.SendMessage(MessageFactory.Instance.RequestAutoAdjustEyebrow());
-                }
             }
             else
             {
@@ -296,16 +272,6 @@ namespace Baku.VMagicMirrorConfig
         }
 
         private void OpenVRoidHub() => UrlNavigate.Open("https://hub.vroid.com/");
-
-        private void OpenManualUrl()
-        {
-            string url =
-                (LanguageName == "Japanese") ?
-                "https://malaybaku.github.io/VMagicMirror" :
-                "https://malaybaku.github.io/VMagicMirror/en";
-
-            UrlNavigate.Open(url);
-        }
 
         private void AutoAdjust() => MessageSender.SendMessage(MessageFactory.Instance.RequestAutoAdjust());
 
@@ -437,6 +403,7 @@ namespace Baku.VMagicMirrorConfig
 
             await MotionSetting.InitializeDeviceNamesAsync();
             await LightSetting.InitializeQualitySelectionsAsync();
+            await WordToMotionSetting.InitializeCustomMotionClipNamesAsync();
 
             Initializer.CameraPositionChecker.Start(
                 2000,
@@ -485,10 +452,6 @@ namespace Baku.VMagicMirrorConfig
                 if (File.Exists(_lastVrmLoadFilePath))
                 {
                     MessageSender.SendMessage(MessageFactory.Instance.OpenVrm(_lastVrmLoadFilePath));
-                    if (AutoAdjustEyebrowOnLoaded)
-                    {
-                        MessageSender.SendMessage(MessageFactory.Instance.RequestAutoAdjustEyebrow());
-                    }
                 }
             }
             catch (Exception ex)
@@ -527,14 +490,6 @@ namespace Baku.VMagicMirrorConfig
                 File.Delete(path);
             }
 
-            //前処理: Unity側に開きかけUIがあるままアプリが終了する場合、
-            //TopMostフラグを一時的に書き換えた値からもとに戻しておく。
-            //※透過フラグは整合させたまま戻すのが結構難しいので諦めて、「次回起動時に配信タブ上で直してくれ」状態にする。
-            if (isInternalFile && _windowTopMostBeforeLoadProcess != null)
-            {
-                WindowSetting.SilentSetTopMost(_windowTopMostBeforeLoadProcess.GetValueOrDefault());
-            }
-
             using (var sw = new StreamWriter(path))
             {
                 //note: 動作設定の一覧は(Unityに投げる都合で)JSONになってるのでやや構造がめんどいです。
@@ -546,7 +501,6 @@ namespace Baku.VMagicMirrorConfig
                     LastLoadedVRoidModelId = isInternalFile ? _lastLoadedVRoidModelId : "",
                     AutoLoadLastLoadedVrm = isInternalFile ? AutoLoadLastLoadedVrm : false,
                     PreferredLanguageName = isInternalFile ? LanguageName : "",
-                    AdjustEyebrowOnLoaded = AutoAdjustEyebrowOnLoaded,
                     WindowSetting = this.WindowSetting,
                     MotionSetting = this.MotionSetting,
                     LayoutSetting = this.LayoutSetting,
@@ -562,7 +516,7 @@ namespace Baku.VMagicMirrorConfig
             using (var sr = new StreamReader(path))
             {
                 var serializer = new XmlSerializer(typeof(SaveData));
-                var saveData = (SaveData)serializer.Deserialize(sr);
+                var saveData = (SaveData?)serializer.Deserialize(sr);
                 if (saveData == null)
                 {
                     return;
@@ -578,8 +532,6 @@ namespace Baku.VMagicMirrorConfig
                         (saveData.PreferredLanguageName ?? "") :
                         "";
                 }
-
-                AutoAdjustEyebrowOnLoaded = saveData.AdjustEyebrowOnLoaded;
 
                 WindowSetting.CopyFrom(saveData.WindowSetting);
                 MotionSetting.CopyFrom(saveData.MotionSetting);
@@ -628,7 +580,6 @@ namespace Baku.VMagicMirrorConfig
         private void PrepareShowUiOnUnity()
         {
             _windowTransparentBeforeLoadProcess = WindowSetting.IsTransparent;
-            _windowTopMostBeforeLoadProcess = WindowSetting.TopMost;
             WindowSetting.IsTransparent = false;
             WindowSetting.TopMost = false;
         }
@@ -640,12 +591,6 @@ namespace Baku.VMagicMirrorConfig
             {
                 WindowSetting.IsTransparent = _windowTransparentBeforeLoadProcess.GetValueOrDefault();
                 _windowTransparentBeforeLoadProcess = null;
-            }
-
-            if (_windowTopMostBeforeLoadProcess != null)
-            {
-                WindowSetting.TopMost = _windowTopMostBeforeLoadProcess.GetValueOrDefault();
-                _windowTopMostBeforeLoadProcess = null;
             }
         }
     }
